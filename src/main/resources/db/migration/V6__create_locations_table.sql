@@ -1,0 +1,11 @@
+CREATE TABLE locations (
+    id BIGSERIAL PRIMARY KEY,
+    country VARCHAR(100) NOT NULL,
+    city VARCHAR(100) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    place_name VARCHAR(150) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_locations_city ON locations(city);
