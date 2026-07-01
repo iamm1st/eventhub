@@ -1,14 +1,16 @@
 package com.eventhub.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
@@ -18,11 +20,31 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({
-            EmailAlreadyExistsException.class,
-            UsernameAlreadyExistsException.class})
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequest(
+            BadRequestException exception,
+            HttpServletRequest request) {
+
+        return buildErrorResponse(
+                HttpStatus.BAD_REQUEST,
+                exception.getMessage(),
+                request.getRequestURI());
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFound(
+            ResourceNotFoundException exception,
+            HttpServletRequest request) {
+
+        return buildErrorResponse(
+                HttpStatus.NOT_FOUND,
+                exception.getMessage(),
+                request.getRequestURI());
+    }
+
+    @ExceptionHandler(ConflictException.class)
     public ResponseEntity<ErrorResponse> handleConflict(
-            RuntimeException exception,
+            ConflictException exception,
             HttpServletRequest request) {
 
         return buildErrorResponse(
@@ -32,33 +54,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
-            UserNotFoundException.class,
-            RoleNotFoundException.class})
-    public ResponseEntity<ErrorResponse> handleNotFound(
-            RuntimeException exception,
-            HttpServletRequest request) {
-
-        return buildErrorResponse(
-                HttpStatus.NOT_FOUND,
-                exception.getMessage(),
-                request.getRequestURI());
-    }
-
-    @ExceptionHandler({
-            InvalidCredentialsException.class,
-            BadCredentialsException.class})
-    public ResponseEntity<ErrorResponse> handleUnauthorized(
-            HttpServletRequest request) {
-
-        return buildErrorResponse(
-                HttpStatus.UNAUTHORIZED,
-                "Invalid email or password",
-                request.getRequestURI());
-    }
-
-    @ExceptionHandler({
-            UserBlockedException.class,
-            DisabledException.class})
+            ForbiddenActionException.class,
+            AccessDeniedException.class,
+            DisabledException.class
+    })
     public ResponseEntity<ErrorResponse> handleForbidden(
             RuntimeException exception,
             HttpServletRequest request) {
@@ -66,6 +65,18 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(
                 HttpStatus.FORBIDDEN,
                 exception.getMessage(),
+                request.getRequestURI());
+    }
+
+    @ExceptionHandler({
+            InvalidCredentialsException.class,
+            AuthenticationException.class})
+    public ResponseEntity<ErrorResponse> handleUnauthorized(
+            HttpServletRequest request) {
+
+        return buildErrorResponse(
+                HttpStatus.UNAUTHORIZED,
+                "Invalid email or password",
                 request.getRequestURI());
     }
 
@@ -79,16 +90,21 @@ public class GlobalExceptionHandler {
                 .getFieldErrors()
                 .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
 
-        ValidationErrorResponse response = ValidationErrorResponse.builder()
-                .status(HttpStatus.BAD_REQUEST.value())
-                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                .message("Validation failed")
-                .path(request.getRequestURI())
-                .errors(errors)
-                .timestamp(LocalDateTime.now())
-                .build();
+        return buildValidationErrorResponse(errors, request.getRequestURI());
+    }
 
-        return ResponseEntity.badRequest().body(response);
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ValidationErrorResponse> handleConstraintViolation(
+            ConstraintViolationException exception,
+            HttpServletRequest request) {
+        Map<String, String> errors = new LinkedHashMap<>();
+
+        exception.getConstraintViolations()
+                .forEach(violation -> errors.put(
+                        violation.getPropertyPath().toString(),
+                        violation.getMessage()));
+
+        return buildValidationErrorResponse(errors, request.getRequestURI());
     }
 
     @ExceptionHandler(Exception.class)
@@ -116,5 +132,20 @@ public class GlobalExceptionHandler {
                 .build();
 
         return ResponseEntity.status(status).body(response);
+    }
+
+    private ResponseEntity<ValidationErrorResponse> buildValidationErrorResponse(
+            Map<String, String> errors,
+            String path) {
+        ValidationErrorResponse response = ValidationErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .message("Validation failed")
+                .path(path)
+                .errors(errors)
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.badRequest().body(response);
     }
 }

@@ -11,7 +11,6 @@ import com.eventhub.exception.EmailAlreadyExistsException;
 import com.eventhub.exception.InvalidCredentialsException;
 import com.eventhub.exception.RoleNotFoundException;
 import com.eventhub.exception.UserBlockedException;
-import com.eventhub.exception.UserNotFoundException;
 import com.eventhub.exception.UsernameAlreadyExistsException;
 import com.eventhub.mapper.UserMapper;
 import com.eventhub.repository.RoleRepository;
@@ -77,7 +76,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UserNotFoundException(request.getEmail()));
+                .orElseThrow(InvalidCredentialsException::new);
 
         if (user.getStatus() == UserStatus.BLOCKED) {
             throw new UserBlockedException(request.getEmail());
