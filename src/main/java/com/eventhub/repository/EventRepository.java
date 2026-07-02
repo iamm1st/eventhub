@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface EventRepository extends JpaRepository<Event, Long> {
 
     boolean existsByCategoryId(Long categoryId);
+
+    boolean existsByLocationId(Long locationId);
 }
