@@ -25,6 +25,7 @@ public class UserMapper {
                 .status(user.getStatus())
                 .roles(roles)
                 .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
                 .build();
     }
 }

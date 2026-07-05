@@ -23,4 +23,5 @@ public class UserResponse {
     private UserStatus status;
     private Set<String> roles;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
