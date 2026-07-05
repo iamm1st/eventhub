@@ -1,4 +1,6 @@
-package com.eventhub.exception;
+package com.eventhub.exception.auth;
+
+import com.eventhub.exception.ForbiddenActionException;
 
 public class UserBlockedException extends ForbiddenActionException {
 

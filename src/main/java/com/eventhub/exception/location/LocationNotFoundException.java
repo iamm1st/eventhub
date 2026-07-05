@@ -1,4 +1,6 @@
-package com.eventhub.exception;
+package com.eventhub.exception.location;
+
+import com.eventhub.exception.ResourceNotFoundException;
 
 public class LocationNotFoundException extends ResourceNotFoundException {
 

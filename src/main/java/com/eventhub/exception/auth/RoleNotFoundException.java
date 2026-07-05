@@ -1,6 +1,7 @@
-package com.eventhub.exception;
+package com.eventhub.exception.auth;
 
 import com.eventhub.enums.RoleName;
+import com.eventhub.exception.ResourceNotFoundException;
 
 public class RoleNotFoundException extends ResourceNotFoundException {
 

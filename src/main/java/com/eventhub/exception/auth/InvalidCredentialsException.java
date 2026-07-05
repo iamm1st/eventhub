@@ -1,4 +1,4 @@
-package com.eventhub.exception;
+package com.eventhub.exception.auth;
 
 public class InvalidCredentialsException extends RuntimeException {
 

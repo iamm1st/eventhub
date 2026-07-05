@@ -1,4 +1,6 @@
-package com.eventhub.exception;
+package com.eventhub.exception.category;
+
+import com.eventhub.exception.ResourceNotFoundException;
 
 public class CategoryNotFoundException extends ResourceNotFoundException {
 
