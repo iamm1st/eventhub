@@ -19,6 +19,7 @@ import com.eventhub.exception.event.EventAlreadyStartedException;
 import com.eventhub.exception.event.EventCannotBeDeletedException;
 import com.eventhub.exception.event.EventCannotBePublishedException;
 import com.eventhub.exception.event.EventCannotBeUpdatedException;
+import com.eventhub.exception.event.EventCapacityBelowTicketQuantityException;
 import com.eventhub.exception.event.EventNotFoundException;
 import com.eventhub.exception.event.InvalidEventDatesException;
 import com.eventhub.exception.location.LocationNotFoundException;
@@ -27,6 +28,7 @@ import com.eventhub.mapper.EventMapper;
 import com.eventhub.repository.EventCategoryRepository;
 import com.eventhub.repository.EventRepository;
 import com.eventhub.repository.LocationRepository;
+import com.eventhub.repository.TicketTypeRepository;
 import com.eventhub.repository.UserRepository;
 import com.eventhub.security.CurrentUserProvider;
 import com.eventhub.service.EventService;
@@ -50,6 +52,7 @@ public class EventServiceImpl implements EventService {
     private final EventCategoryRepository eventCategoryRepository;
     private final LocationRepository locationRepository;
     private final UserRepository userRepository;
+    private final TicketTypeRepository ticketTypeRepository;
     private final CurrentUserProvider currentUserProvider;
     private final EventMapper eventMapper;
 
@@ -110,6 +113,7 @@ public class EventServiceImpl implements EventService {
         Event event = findEventById(id);
         checkCanManageEvent(event);
         checkEventCanBeUpdated(event);
+        validateCapacityIsNotBelowTicketQuantity(event.getId(), request.getCapacity());
 
         EventCategory category = findCategoryById(request.getCategoryId());
         Location location = findLocationById(request.getLocationId());
@@ -264,6 +268,14 @@ public class EventServiceImpl implements EventService {
     private void validateEventDates(LocalDateTime startDate, LocalDateTime endDate) {
         if (!endDate.isAfter(startDate)) {
             throw new InvalidEventDatesException();
+        }
+    }
+
+    private void validateCapacityIsNotBelowTicketQuantity(Long eventId, Integer newCapacity) {
+        Long totalTicketQuantity = ticketTypeRepository.sumTotalQuantityByEventId(eventId);
+
+        if (totalTicketQuantity > newCapacity) {
+            throw new EventCapacityBelowTicketQuantityException(eventId);
         }
     }
 

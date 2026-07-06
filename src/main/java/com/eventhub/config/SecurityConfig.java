@@ -55,6 +55,7 @@ public class SecurityConfig {
                                 "/actuator/info"
                         ).permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/events/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/ticket-types/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/locations/**").permitAll()
                         .anyRequest().authenticated()
