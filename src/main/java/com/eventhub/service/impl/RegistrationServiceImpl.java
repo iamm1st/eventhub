@@ -1,5 +1,6 @@
 package com.eventhub.service.impl;
 
+import com.eventhub.aspect.LogAction;
 import com.eventhub.dto.request.RegistrationCreateRequest;
 import com.eventhub.dto.response.RegistrationResponse;
 import com.eventhub.entity.Event;
@@ -55,6 +56,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final RegistrationMapper registrationMapper;
 
     @Override
+    @LogAction(action = "BUY_TICKET", entityType = "REGISTRATION")
     @Transactional
     public RegistrationResponse buyTicket(RegistrationCreateRequest request) {
         Long currentUserId = currentUserProvider.getCurrentUserId();
@@ -106,6 +108,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
+    @LogAction(action = "CANCEL_REGISTRATION", entityType = "REGISTRATION", entityIdArgIndex = 0)
     @Transactional
     public RegistrationResponse cancelRegistration(Long id) {
         Long currentUserId = currentUserProvider.getCurrentUserId();

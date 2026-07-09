@@ -1,5 +1,6 @@
 package com.eventhub.service.impl;
 
+import com.eventhub.aspect.LogAction;
 import com.eventhub.dto.request.ReviewCreateRequest;
 import com.eventhub.dto.request.ReviewUpdateRequest;
 import com.eventhub.dto.response.ReviewResponse;
@@ -48,6 +49,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewMapper reviewMapper;
 
     @Override
+    @LogAction(action = "CREATE_REVIEW", entityType = "REVIEW")
     @Transactional
     public ReviewResponse createReview(Long eventId, ReviewCreateRequest request) {
         Long currentUserId = currentUserProvider.getCurrentUserId();
@@ -97,6 +99,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @LogAction(action = "UPDATE_REVIEW", entityType = "REVIEW", entityIdArgIndex = 0)
     @Transactional
     public ReviewResponse updateReview(Long id, ReviewUpdateRequest request) {
         Long currentUserId = currentUserProvider.getCurrentUserId();
@@ -121,6 +124,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @LogAction(action = "DELETE_REVIEW", entityType = "REVIEW", entityIdArgIndex = 0, useReturnedId = false)
     @Transactional
     public void deleteReview(Long id) {
         Review review = findReviewById(id);

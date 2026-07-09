@@ -1,5 +1,6 @@
 package com.eventhub.service.impl;
 
+import com.eventhub.aspect.LogAction;
 import com.eventhub.dto.request.OrganizerApplicationCreateRequest;
 import com.eventhub.dto.request.OrganizerApplicationReviewRequest;
 import com.eventhub.dto.response.OrganizerApplicationResponse;
@@ -102,6 +103,7 @@ public class OrganizerApplicationServiceImpl implements OrganizerApplicationServ
     }
 
     @Override
+    @LogAction(action = "APPROVE_ORGANIZER_APPLICATION", entityType = "ORGANIZER_APPLICATION", entityIdArgIndex = 0)
     @Transactional
     public OrganizerApplicationResponse approveApplication(Long id, OrganizerApplicationReviewRequest request) {
         OrganizerApplication application = findApplicationById(id);
@@ -122,6 +124,7 @@ public class OrganizerApplicationServiceImpl implements OrganizerApplicationServ
     }
 
     @Override
+    @LogAction(action = "REJECT_ORGANIZER_APPLICATION", entityType = "ORGANIZER_APPLICATION", entityIdArgIndex = 0)
     @Transactional
     public OrganizerApplicationResponse rejectApplication(Long id, OrganizerApplicationReviewRequest request) {
         OrganizerApplication application = findApplicationById(id);

@@ -1,5 +1,6 @@
 package com.eventhub.service.impl;
 
+import com.eventhub.aspect.LogAction;
 import com.eventhub.dto.request.UserUpdateRequest;
 import com.eventhub.dto.response.UserResponse;
 import com.eventhub.entity.User;
@@ -75,6 +76,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @LogAction(action = "BLOCK_USER", entityType = "USER", entityIdArgIndex = 0)
     @Transactional
     public UserResponse blockUser(Long id) {
         Long currentUserId = currentUserProvider.getCurrentUserId();
@@ -95,6 +97,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @LogAction(action = "UNBLOCK_USER", entityType = "USER", entityIdArgIndex = 0)
     @Transactional
     public UserResponse unblockUser(Long id) {
         User user = findUserById(id);

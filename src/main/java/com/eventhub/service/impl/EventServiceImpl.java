@@ -1,5 +1,6 @@
 package com.eventhub.service.impl;
 
+import com.eventhub.aspect.LogAction;
 import com.eventhub.dto.request.EventCreateRequest;
 import com.eventhub.dto.request.EventUpdateRequest;
 import com.eventhub.dto.response.EventResponse;
@@ -76,6 +77,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @LogAction(action = "CREATE_EVENT", entityType = "EVENT")
     @Transactional
     public EventResponse createEvent(EventCreateRequest request) {
         validateEventDates(request.getStartDate(), request.getEndDate());
@@ -106,6 +108,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @LogAction(action = "UPDATE_EVENT", entityType = "EVENT", entityIdArgIndex = 0)
     @Transactional
     public EventResponse updateEvent(Long id, EventUpdateRequest request) {
         validateEventDates(request.getStartDate(), request.getEndDate());
@@ -130,6 +133,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @LogAction(action = "PUBLISH_EVENT", entityType = "EVENT", entityIdArgIndex = 0)
     @Transactional
     public EventResponse publishEvent(Long id) {
         Event event = findEventById(id);
@@ -148,6 +152,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @LogAction(action = "CANCEL_EVENT", entityType = "EVENT", entityIdArgIndex = 0)
     @Transactional
     public EventResponse cancelEvent(Long id) {
         Event event = findEventById(id);
@@ -165,6 +170,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @LogAction(action = "DELETE_EVENT", entityType = "EVENT", entityIdArgIndex = 0, useReturnedId = false)
     @Transactional
     public void deleteEvent(Long id) {
         Event event = findEventById(id);
