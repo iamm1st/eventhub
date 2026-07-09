@@ -1,6 +1,8 @@
 package com.eventhub.repository;
 
 import com.eventhub.entity.User;
+import com.eventhub.enums.RoleName;
+import com.eventhub.enums.UserStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -34,4 +36,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmailIgnoreCaseAndIdNot(String email, Long id);
 
     boolean existsByUsernameIgnoreCaseAndIdNot(String username, Long id);
+
+    // blocked users
+    long countByStatus(UserStatus status);
+
+    // organizers in system
+    @Query("SELECT COUNT(u) FROM User u JOIN u.roles r WHERE r.name = :roleName")
+    long countByRoleName(@Param("roleName") RoleName roleName);
 }

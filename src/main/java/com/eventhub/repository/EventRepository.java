@@ -23,7 +23,10 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
 
     boolean existsByLocationId(Long locationId);
 
-    // status is equal to the given status and EndDate is earlier than the given date
+    long countByOrganizerId(Long organizerId);
+
+    List<Event> findByOrganizerId(Long organizerId);
+
     List<Event> findByStatusAndEndDateBefore(EventStatus status, LocalDateTime endDate);
 
     @Override

@@ -15,18 +15,21 @@ public interface RegistrationRepository extends JpaRepository<Registration, Long
 
     boolean existsByTicketTypeIdAndStatus(Long ticketTypeId, RegistrationStatus status);
 
-    boolean existsByUserIdAndEventIdAndStatus(
-            Long userId,
-            Long eventId,
-            RegistrationStatus status);
+    boolean existsByUserIdAndEventIdAndStatus(Long userId, Long eventId, RegistrationStatus status);
 
-    // registrations
+    // how many tickets have the organizer sold
+    long countByEventOrganizerIdAndStatus(Long organizerId, RegistrationStatus status);
+
     @EntityGraph(attributePaths = {"event", "ticketType"})
     List<Registration> findByUserIdOrderByRegistrationDateDesc(Long userId);
 
     // list of participants of the event for organizer
     @EntityGraph(attributePaths = {"user", "ticketType"})
     List<Registration> findByEventIdOrderByRegistrationDateDesc(Long eventId);
+
+    // to find the most popular event using stream API
+    @EntityGraph(attributePaths = {"event", "ticketType"})
+    List<Registration> findByEventOrganizerIdAndStatus(Long organizerId, RegistrationStatus status);
 
     @Override
     @NonNull
