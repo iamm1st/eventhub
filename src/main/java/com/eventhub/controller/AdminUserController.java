@@ -2,6 +2,7 @@ package com.eventhub.controller;
 
 import com.eventhub.dto.response.UserResponse;
 import com.eventhub.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/admin/users")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
+@Tag(name = "Admin users", description = "Admin user management")
 public class AdminUserController {
 
     private final UserService userService;

@@ -4,6 +4,7 @@ import com.eventhub.dto.request.OrganizerApplicationReviewRequest;
 import com.eventhub.dto.response.OrganizerApplicationResponse;
 import com.eventhub.enums.OrganizerApplicationStatus;
 import com.eventhub.service.OrganizerApplicationService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/admin/organizer-applications")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
+@Tag(name = "Admin organizer applications", description = "Admin review of organizer applications")
 public class AdminOrganizerApplicationController {
 
     private final OrganizerApplicationService organizerApplicationService;

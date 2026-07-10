@@ -3,6 +3,7 @@ package com.eventhub.controller;
 import com.eventhub.dto.request.OrganizerApplicationCreateRequest;
 import com.eventhub.dto.response.OrganizerApplicationResponse;
 import com.eventhub.service.OrganizerApplicationService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/organizer-applications")
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('USER')")
+@Tag(name = "Organizer applications", description = "User requests to become an organizer")
 public class OrganizerApplicationController {
 
     private final OrganizerApplicationService organizerApplicationService;
