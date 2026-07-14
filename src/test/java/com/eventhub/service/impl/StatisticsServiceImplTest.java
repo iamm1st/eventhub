@@ -23,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -102,7 +103,7 @@ class StatisticsServiceImplTest {
         assertEquals(2L, response.getEventsCount());
         assertEquals(3L, response.getSoldTickets());
         assertEquals(BigDecimal.valueOf(150), response.getTotalRevenue());
-        assertEquals(BigDecimal.valueOf(4.50).setScale(2), response.getAverageRating());
+        assertEquals(BigDecimal.valueOf(4.5).setScale(2, RoundingMode.HALF_UP), response.getAverageRating());
         assertEquals("Java Conference", response.getMostPopularEventTitle());
         assertEquals(2L, response.getMostPopularEventTicketsSold());
     }
@@ -123,7 +124,7 @@ class StatisticsServiceImplTest {
 
         OrganizerStatisticsResponse response = statisticsService.getOrganizerStatistics();
 
-        assertEquals(BigDecimal.ZERO.setScale(2), response.getAverageRating());
+        assertEquals(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP), response.getAverageRating());
         assertEquals(0L, response.getMostPopularEventTicketsSold());
     }
 }

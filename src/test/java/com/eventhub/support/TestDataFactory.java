@@ -33,6 +33,7 @@ public final class TestDataFactory {
                 .build();
     }
 
+    // varargs - variable number of arguments
     public static User user(Long id, RoleName... roleNames) {
         Set<Role> roles = new HashSet<>();
 

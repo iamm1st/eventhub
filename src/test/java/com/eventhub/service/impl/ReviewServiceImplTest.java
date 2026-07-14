@@ -23,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -92,8 +93,7 @@ class ReviewServiceImplTest {
         ReviewResponse actualResponse = reviewService.createReview(event.getId(), request);
 
         assertEquals(expectedResponse, actualResponse);
-        assertEquals(BigDecimal.valueOf(5.00).setScale(2), event.getRating());
-
+        assertEquals(BigDecimal.valueOf(5).setScale(2, RoundingMode.HALF_UP), event.getRating());
         verify(reviewRepository).save(any(Review.class));
     }
 
