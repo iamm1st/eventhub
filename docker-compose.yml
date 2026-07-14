@@ -17,8 +17,7 @@ services:
       retries: 5
 
   app:
-    image: iamm1st/eventhub
-    build: .
+    image: iamm1st/eventhub:latest
     container_name: eventhub-app
     depends_on:
       postgres:
